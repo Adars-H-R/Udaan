@@ -1,0 +1,93 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+@model CarCrashViewModel 
+<div class="container">
+
+    <div>
+        <a href="@Url.Action("Index","Home", new { pageSize = (Model.PreviousPageIndex + 30) })">Prev</a>
+        <a href="@Url.Action("Index","Home", new { pageSize = (Model.PreviousPageIndex ) })">Next</a>
+    </div>
+
+    
+    <div class="row" id="myItems">
+        <div class="row">
+            <div class="col-sm-12 mb-3">
+                <input type="text" id="myFilter" class="form-control" onkeyup="myFunction()" placeholder="Search for names..">
+            </div>
+        </div>
+        <div id="providersCards" class="row p-3">
+            @foreach (CarCrash carCrash in Model.CarCrashes)
+            {
+                <div class="col-6 providersCardsDiv">
+                    <div class="card mb-3">
+                        <div class="p-1 row no-gutters">
+                            <div class="col-12 align-self-center">
+                                <div class="card-body ">
+                                    <h5 class="card-title providerdetails">Vehicle Type 1: @carCrash.VehicleTypeCode1</h5>
+                                    <h5 class="card-text providerdetails">Vehicle Type 2: @carCrash.VehicleTypeCode1</h5>
+                                    <h5 class="card-title providerdetails">Crash Date: @carCrash.CrashDate</h5>
+                                    <h5 class="card-text providerdetails">Crash Time: @carCrash.CrashTime</h5>
+                                    <button onclick="return bindModalData(this)" data-toggle="modal" data-target="#seeDeatils" data-vT1="@carCrash.VehicleTypeCode1" ,data-vT2="@carCrash.VehicleTypeCode2" ,data-CrashDate="@carCrash.CrashDate"
+                                            data-CrashTime="@carCrash.CrashTime" ,data-OnStreetName="@carCrash.OnStreetName" ,data-NumberOfPersonsInjured="@carCrash.NumberOfPersonsInjured"
+                                            data-NumberOfPersonsKilled="@carCrash.NumberOfPersonsKilled" ,data-NumberOfPedestriansInjured="@carCrash.NumberOfPedestriansInjured"
+                                            data-NumberOfPedestriansKilled="@carCrash.NumberOfPedestriansKilled" ,data-ZipCode="@carCrash.ZipCode"
+                                            class=" mt-1 btn btn-primary providerCheckBox" type="button">
+                                        View Complete Details
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="modal fade" id="seeDeatils" tabindex="-1" role="dialog" aria-labelledby="seeDeatils" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header border-bottom">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Car Crash Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body p-5">
+                    <div id="modalBody" class="">
+                        
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function bindModalData(e) {
+        $('#modalBody').empty();
+        var body = '<div class=row>   Vehicle Type 1 ' + e.dataset.vt1 + ' </div>'      + '<div class=row>   Number of pedestrians killed ' + e.dataset.numberofpedestrianskilled + ' </div>'
+            + '<div class=row>   Number of persons killed ' + e.dataset.numberofpersonskilled + ' </div>' + '<div class=row>   Number of persons killed ' + e.dataset.numberofpersonskilled + ' </div>'
+
+        $('#modalBody').append(body);
+        $('#modalBody').trigger();
+    }
+
+    function myFunction() {
+        var input, filter, cards, cardContainer, h5, title, i;
+        input = document.getElementById("myFilter");
+        filter = input.value.toUpperCase();
+        cardContainer = document.getElementById("myItems");
+        cards = cardContainer.getElementsByClassName("card");
+        for (i = 0; i < cards.length; i++) {
+            title = cards[i].querySelector(".card-body h5.card-title");
+            if (title.innerText.toUpperCase().indexOf(filter) > -1) {
+                cards[i].style.display = "";
+            } else {
+                cards[i].style.display = "none";
+            }
+        }
+    }
+</script>
